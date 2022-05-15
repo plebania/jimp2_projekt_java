@@ -1,5 +1,6 @@
 import gui.OknoGlowne;
 import gui.OknoStworzGraf;
+import gui.OknoWybierzPlik;
 import gui.PanelBoczny;
 import struktury.Graf;
 
@@ -13,6 +14,8 @@ public class Logika implements ActionListener {
     PanelBoczny p;
     Graf g;
     OknoStworzGraf o1;
+    OknoWybierzPlik o2;
+    String sciezka;
 
     Random r = new Random(System.currentTimeMillis());
 
@@ -24,11 +27,15 @@ public class Logika implements ActionListener {
     }
 
     void akcjaPrzyciskuZapisz() {
-
+        o2 = new OknoWybierzPlik(OknoWybierzPlik.WczytajZapisz.ZAPISZ);
+        sciezka = o2.getSciezka();
+        System.out.println(sciezka);
     }
 
     void akcjaPrzyciskuWczytaj() {
-
+        o2 = new OknoWybierzPlik(OknoWybierzPlik.WczytajZapisz.WCZYTAJ);
+        sciezka = o2.getSciezka();
+        System.out.println(sciezka);
     }
 
     void akcjaPrzyciskuStworzGraf() {
