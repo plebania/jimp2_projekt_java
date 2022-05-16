@@ -1,3 +1,5 @@
+import GrafFun.Bfs;
+import GrafFun.Dijkstra;
 import gui.OknoGlowne;
 import gui.OknoStworzGraf;
 import gui.OknoWybierzPlik;
@@ -12,7 +14,7 @@ import java.util.Random;
 public class Logika implements ActionListener {
     OknoGlowne o;
     PanelBoczny p;
-    Graf g;
+    Graf g = null;
     OknoStworzGraf o1;
     OknoWybierzPlik o2;
     String sciezka;
@@ -53,6 +55,23 @@ public class Logika implements ActionListener {
         o1.dispatchEvent(new WindowEvent(o1, WindowEvent.WINDOW_CLOSING));
     }
 
+    void akcjaPrzyciskuUruchomAlgorytm() {
+        if (g == null)
+            return;
+        switch (p.getWybrany_algorytm()) {
+            case Dijkstra_alg -> {
+                Dijkstra dij = new Dijkstra();
+                dij.szukaj(g, 0);
+                System.out.println(dij);
+            }
+            case Bfs_alg -> {
+                Bfs bfs = new Bfs();
+                bfs.szukaj(g, 0);
+                System.out.println(bfs);
+            }
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {  //TODO obsluga eventow do innego threada?
         System.out.println(e.getActionCommand());
         switch (e.getActionCommand()) {
@@ -61,6 +80,7 @@ public class Logika implements ActionListener {
             case "Stwórz Graf" -> akcjaPrzyciskuStworzGraf();
             case "Stwórz" -> akcjaPrzyciskuStworz();
             case "Anuluj" -> akcjaPrzyciskuAnuluj();
+            case "Uruchom algorytm" -> akcjaPrzyciskuUruchomAlgorytm();
         }
     }
 }

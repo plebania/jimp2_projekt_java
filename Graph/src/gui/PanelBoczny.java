@@ -7,15 +7,16 @@ import java.awt.event.ActionListener;
 
 
 public class PanelBoczny extends JPanel implements ActionListener {
-    enum nr_algorytmu {
+
+    public enum nr_algorytmu {
         Dijkstra_alg,
         Bfs_alg
     }
 
-    JButton stworz = new JButton("Stwórz Graf"),
-            wczytaj = new JButton("Wczytaj"),
-            zapisz = new JButton("Zapisz"),
-            uruchom_algorytm = new JButton("Uruchom algorytm");
+    JButton przycisk_stworz = new JButton("Stwórz Graf"),
+            przycisk_wczytaj = new JButton("Wczytaj"),
+            przycisk_zapisz = new JButton("Zapisz"),
+            przycisk_uruchom_algorytm = new JButton("Uruchom algorytm");
     nr_algorytmu wybrany_algorytm = nr_algorytmu.Dijkstra_alg;
 
     public PanelBoczny() {
@@ -43,16 +44,17 @@ public class PanelBoczny extends JPanel implements ActionListener {
         algorytmy_panel.add(Bfs);
 
         //panel przyciskow wczytaj, zapisz
-        wczytaj_zapisz_panel.add(wczytaj);
-        wczytaj_zapisz_panel.add(zapisz);
+        wczytaj_zapisz_panel.add(przycisk_wczytaj);
+        wczytaj_zapisz_panel.add(przycisk_zapisz);
 
 
         //panel elementów znajdujących się na górze
         panel_gora.add(Algorytm_opis);
         panel_gora.add(algorytmy_panel);
         //panel elementów znajdujących się na dole
+        panel_dol.add(przycisk_uruchom_algorytm);
         panel_dol.add(wczytaj_zapisz_panel);
-        panel_dol.add(stworz);
+        panel_dol.add(przycisk_stworz);
 
 
         setLayout(new BorderLayout());
@@ -62,9 +64,10 @@ public class PanelBoczny extends JPanel implements ActionListener {
     }
 
     public void setActionListeners(ActionListener a) {
-        wczytaj.addActionListener(a);
-        zapisz.addActionListener(a);
-        stworz.addActionListener(a);
+        przycisk_wczytaj.addActionListener(a);
+        przycisk_zapisz.addActionListener(a);
+        przycisk_stworz.addActionListener(a);
+        przycisk_uruchom_algorytm.addActionListener(a);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -73,5 +76,9 @@ public class PanelBoczny extends JPanel implements ActionListener {
             case "Dijkstra" -> wybrany_algorytm = nr_algorytmu.Dijkstra_alg;
             case "BFS" -> wybrany_algorytm = nr_algorytmu.Bfs_alg;
         }
+    }
+
+    public nr_algorytmu getWybrany_algorytm() {
+        return wybrany_algorytm;
     }
 }
