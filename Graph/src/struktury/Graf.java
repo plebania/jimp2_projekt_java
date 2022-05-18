@@ -1,33 +1,37 @@
 package struktury;
 
-import struktury.TD_Krawedzi;
-
 import java.util.Random;
 
 public class Graf {
     public TD_Krawedzi[] krawedzie;
-    int rozmiar, komorek, w, h;
+    int rozmiar, w, h;
 
-    void initGraf(int rozmiar, int komorek, int w, int h) {
-        this.komorek = komorek;
+    void initGraf(int rozmiar, int w, int h) {
         this.rozmiar = rozmiar;
         this.w = w;
         this.h = h;
         krawedzie = new TD_Krawedzi[rozmiar];
-        for (int x = 0; x < komorek; x++)
+        for (int x = 0; x < rozmiar; x++)
             krawedzie[x] = new TD_Krawedzi();
     }
 
     public Graf() {
-        initGraf(2, 0, 0, 0);
+        initGraf(2, 0, 0);
     }
 
     public Graf(int rozmiar) {
-        initGraf(rozmiar, 0, 0, 0);
+        initGraf(rozmiar, 0, 0);
+    }
+
+    public Graf(TD_Krawedzi[] krawedzie, int rozmiar, int w, int h) {
+        this.krawedzie = krawedzie;
+        this.rozmiar = rozmiar;
+        this.w = w;
+        this.h = h;
     }
 
     public Graf(int w, int h) {
-        initGraf(w * h, w * h, w, h);
+        initGraf(w * h, w, h);
     }
 
     public void setW(int w) //TODO przemyśleć czy nie zainicjować ponownie grafu
@@ -48,7 +52,11 @@ public class Graf {
     }
 
     public int size() {
-        return komorek;
+        return rozmiar;
+    }
+
+    void dodajKrawedz(int w1, int w2, double waga) {
+        krawedzie[w1].dodajKrawedz(w2, waga);
     }
 
     void dodajKrawedzDwostronna(int w1, int w2, double waga) {
@@ -61,7 +69,7 @@ public class Graf {
     }
 
     public void stworzGraf(double min_wag, double max_wag, Random r) {
-        initGraf(w * h, w * h, w, h);
+        initGraf(w * h, w, h);
 
         if (w == 1 || h == 1) {
             for (int x = 0; x < w * h - 1; x++)
@@ -82,7 +90,7 @@ public class Graf {
 
     public String toString() {
         String out = w + " " + h + "\n";
-        for (int x = 0; x < komorek; x++) {
+        for (int x = 0; x < rozmiar; x++) {
             out += "\t";
             for (int y = 0; y < krawedzie[x].size(); y++)
                 out += " " + krawedzie[x].Do[y] + " :" + krawedzie[x].wagi[y] + " ";

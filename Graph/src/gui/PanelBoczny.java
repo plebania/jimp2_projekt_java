@@ -16,6 +16,7 @@ public class PanelBoczny extends JPanel implements ActionListener {
     JButton przycisk_stworz = new JButton("Stwórz Graf"),
             przycisk_wczytaj = new JButton("Wczytaj"),
             przycisk_zapisz = new JButton("Zapisz"),
+            przycisk_zapisz_jako = new JButton("Zapisz Jako"),
             przycisk_uruchom_algorytm = new JButton("Uruchom algorytm");
     nr_algorytmu wybrany_algorytm = nr_algorytmu.Dijkstra_alg;
 
@@ -54,6 +55,7 @@ public class PanelBoczny extends JPanel implements ActionListener {
         //panel elementów znajdujących się na dole
         panel_dol.add(przycisk_uruchom_algorytm);
         panel_dol.add(wczytaj_zapisz_panel);
+        panel_dol.add(przycisk_zapisz_jako);
         panel_dol.add(przycisk_stworz);
 
 
@@ -68,6 +70,7 @@ public class PanelBoczny extends JPanel implements ActionListener {
         przycisk_zapisz.addActionListener(a);
         przycisk_stworz.addActionListener(a);
         przycisk_uruchom_algorytm.addActionListener(a);
+        przycisk_zapisz_jako.addActionListener(a);
     }
 
     public void actionPerformed(ActionEvent e) {
