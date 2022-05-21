@@ -41,6 +41,7 @@ public class Bfs {
         }
     }
 
+    @Override
     public String toString() {
         String out = "poprzednicy:[";
         if (size <= 0)

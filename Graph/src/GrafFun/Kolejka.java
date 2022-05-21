@@ -46,6 +46,7 @@ public class Kolejka {
         return pom;
     }
 
+    @Override
     public String toString() {
         if (pierwszy == null)
             return "[]";

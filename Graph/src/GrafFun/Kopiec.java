@@ -66,6 +66,7 @@ public class Kopiec {
         return komorek;
     }
 
+    @Override
     public String toString() {  //TODO lepsze wypisywanie
         String out = "cells:" + komorek + "\n";
         for (int x = 0; x < komorek; x++)

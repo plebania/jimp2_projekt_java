@@ -45,6 +45,7 @@ public class TD_Krawedzi {
         komorek++;
     }
 
+    @Override
     public String toString() {
         String out = "[";
         for (int x = 0; x < komorek - 1; x++)

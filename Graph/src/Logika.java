@@ -1,12 +1,9 @@
 import GrafFun.Bfs;
 import GrafFun.Dijkstra;
-import gui.OknoGlowne;
-import gui.OknoStworzGraf;
-import gui.OknoWybierzPlik;
-import gui.PanelBoczny;
+import gui.*;
 import struktury.Graf;
 
-import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
@@ -17,7 +14,8 @@ import IO.Util;
 
 public class Logika implements ActionListener {
     OknoGlowne o;
-    PanelBoczny p;
+    PanelBoczny panelBoczny;
+    PanelGraf panelGraf;
     Graf g = null;
     OknoStworzGraf o1;
     OknoWybierzPlik o2;
@@ -27,9 +25,10 @@ public class Logika implements ActionListener {
 
 
     public Logika() {
-        p = new PanelBoczny();
-        o = new OknoGlowne(p);
-        p.setActionListeners(this);
+        panelBoczny = new PanelBoczny();
+        panelGraf = new PanelGraf();
+        o = new OknoGlowne(panelBoczny, panelGraf);
+        panelBoczny.setActionListeners(this);
 
         o.Show();
     }
@@ -68,13 +67,12 @@ public class Logika implements ActionListener {
         if (!pom.equals("")) {
             try {
                 g = Util.wczytajGraf(pom);
-                System.out.println(g);
+                panelGraf.setGraf(g);
                 sciezka = pom;
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
-        System.out.println(sciezka);
     }
 
     void akcjaPrzyciskuStworzGraf() {
@@ -85,6 +83,7 @@ public class Logika implements ActionListener {
     void akcjaPrzyciskuStworz() {
         g = new Graf(o1.getW(), o1.getH());
         g.stworzGraf(o1.getW_min(), o1.getW_max(), r);
+        panelGraf.setGraf(g);
         o1.dispatchEvent(new WindowEvent(o1, WindowEvent.WINDOW_CLOSING));
     }
 
@@ -95,7 +94,7 @@ public class Logika implements ActionListener {
     void akcjaPrzyciskuUruchomAlgorytm() {
         if (g == null)
             return;
-        switch (p.getWybrany_algorytm()) {
+        switch (panelBoczny.getWybrany_algorytm()) {
             case Dijkstra_alg -> {
                 Dijkstra dij = new Dijkstra();
                 dij.szukaj(g, 0);

@@ -5,11 +5,12 @@ import java.awt.*;
 
 public class OknoGlowne extends JFrame {
 
-    public OknoGlowne(PanelBoczny p) {
+    public OknoGlowne(PanelBoczny pb, PanelGraf pg) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         setSize(400, 500);
-        add(p, BorderLayout.EAST);
+        add(new JScrollPane(pg), BorderLayout.CENTER);
+        add(pb, BorderLayout.EAST);
         Show();
     }
 

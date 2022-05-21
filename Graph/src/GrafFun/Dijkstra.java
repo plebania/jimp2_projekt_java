@@ -51,6 +51,7 @@ public class Dijkstra {
         return size;
     }
 
+    @Override
     public String toString() {
         String out = "od:[";
         if (size <= 0)
