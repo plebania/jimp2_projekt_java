@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 
 public class PanelBoczny extends JPanel implements ActionListener {
@@ -65,13 +67,33 @@ public class PanelBoczny extends JPanel implements ActionListener {
         setBackground(Color.BLUE);
     }
 
-    public void setActionListeners(ActionListener a) {
-        przycisk_wczytaj.addActionListener(a);
-        przycisk_zapisz.addActionListener(a);
-        przycisk_stworz.addActionListener(a);
-        przycisk_uruchom_algorytm.addActionListener(a);
-        przycisk_zapisz_jako.addActionListener(a);
+
+    public void setActions(AbstractAction zapisz_jako, AbstractAction zapisz, AbstractAction wczytaj, AbstractAction stworz_graf, AbstractAction uruchom_algorytm) {
+        przycisk_zapisz_jako.setAction(zapisz_jako);
+        przycisk_zapisz_jako.getActionMap().put("Zapisz Jako", zapisz_jako);
+        przycisk_zapisz_jako.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke) zapisz_jako.getValue(Action.ACCELERATOR_KEY), "Zapisz Jako");
+        przycisk_zapisz_jako.setText("Zapisz Jako");
+
+        przycisk_zapisz.setAction(zapisz);
+        przycisk_zapisz.getActionMap().put("Zapisz", zapisz);
+        przycisk_zapisz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke) zapisz.getValue(Action.ACCELERATOR_KEY), "Zapisz");
+        przycisk_zapisz.setText("Zapisz");
+
+        przycisk_wczytaj.setAction(wczytaj);
+        przycisk_wczytaj.getActionMap().put("Wczytaj", wczytaj);
+        przycisk_wczytaj.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke) wczytaj.getValue(Action.ACCELERATOR_KEY), "Wczytaj");
+        przycisk_wczytaj.setText("Wczytaj");
+
+        przycisk_stworz.setAction(stworz_graf);
+        przycisk_stworz.getActionMap().put("Stwórz Graf", stworz_graf);
+        przycisk_stworz.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put((KeyStroke) stworz_graf.getValue(Action.ACCELERATOR_KEY), "Stwórz Graf");
+        przycisk_stworz.setText("Stwórz Graf");
+
+        przycisk_uruchom_algorytm.setAction(uruchom_algorytm);
+        przycisk_uruchom_algorytm.getActionMap().put("Uruchom Algorytm", uruchom_algorytm);
+        przycisk_uruchom_algorytm.setText("Uruchom Algorytm");
     }
+
 
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
