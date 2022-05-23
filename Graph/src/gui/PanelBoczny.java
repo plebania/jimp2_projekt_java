@@ -64,7 +64,6 @@ public class PanelBoczny extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         add(panel_dol, BorderLayout.SOUTH);
         add(panel_gora, BorderLayout.NORTH);
-        setBackground(Color.BLUE);
     }
 
 

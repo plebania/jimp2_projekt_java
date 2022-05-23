@@ -1,10 +1,11 @@
 package GrafFun;
 
+import gui.PanelGraf;
 import struktury.Graf;
 
 public class Dijkstra {
-    int[] od;
-    double[] droga;
+    public int[] od;
+    public double[] droga;
     int size;
 
     public Dijkstra() {
@@ -17,7 +18,9 @@ public class Dijkstra {
         droga = new double[n];
     }
 
-    public void szukaj(Graf g, int od) {
+    public void szukaj(PanelGraf pg, int od) {
+        Graf g = pg.getG();
+        Graf pom_g = new Graf(g.size());
         if (od >= g.size())
             return;
         Kopiec k = new Kopiec(g.size());
@@ -40,11 +43,13 @@ public class Dijkstra {
                 waga = g.krawedzie[w].wagi[y];
                 if (droga[w] + waga < droga[v]) {
                     droga[v] = droga[w] + waga;
+                    pom_g.dodajKrawedz(w, v, droga[v]);
                     this.od[v] = w;
                     k.dodaj(v, droga[v]);
                 }
             }
         }
+        pg.setKoloryDijkstra(pom_g);
     }
 
     public int size() {

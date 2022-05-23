@@ -1,5 +1,6 @@
 package GrafFun;
 
+import gui.PanelGraf;
 import struktury.Graf;
 
 
@@ -13,7 +14,8 @@ public class Bfs {
         size = n;
     }
 
-    public void szukaj(Graf g, int od) {
+    public void szukaj(PanelGraf pg, int od) {
+        Graf g = pg.getG(), pom_g = new Graf(g.size());
         if (od >= g.size())
             return;
         initBfs(g.size());
@@ -32,6 +34,7 @@ public class Bfs {
                 v = g.krawedzie[w].Do[y];
                 if (zwiedzone[v] == 0) {
                     zwiedzone[v] = 1;
+                    pom_g.dodajKrawedz(w, v, 1);
                     // out->odleglosc[v] = out->odleglosc[w] + 1;
                     poprzednik[v] = w;
                     k.dodajWierzcholek(v);
@@ -39,6 +42,7 @@ public class Bfs {
             }
             zwiedzone[w] = 2;
         }
+        pg.setKoloryBFS(pom_g);
     }
 
     @Override

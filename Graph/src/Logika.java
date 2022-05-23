@@ -99,12 +99,12 @@ public class Logika implements ActionListener {
             switch (panelBoczny.getWybrany_algorytm()) {
                 case Dijkstra_alg -> {
                     Dijkstra dij = new Dijkstra();
-                    dij.szukaj(g, 0);
+                    dij.szukaj(panelGraf, 0);
                     System.out.println(dij);
                 }
                 case Bfs_alg -> {
                     Bfs bfs = new Bfs();
-                    bfs.szukaj(g, 0);
+                    bfs.szukaj(panelGraf, 0);
                     System.out.println(bfs);
                 }
             }

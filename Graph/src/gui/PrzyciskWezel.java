@@ -7,13 +7,14 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-public class PrzyciskOkragly extends JButton {
+public class PrzyciskWezel extends JButton {
 
+    private Color kolor = Color.BLACK;
 
     private boolean mouseOver = false;
     private boolean mousePressed = false;
 
-    public PrzyciskOkragly() {
+    public PrzyciskWezel() {
         //super("test");
         setOpaque(false);
         setFocusPainted(false);
@@ -53,6 +54,10 @@ public class PrzyciskOkragly extends JButton {
         addMouseMotionListener(mouseListener);
     }
 
+    public void setKolor(Color k) {
+        kolor = k;
+    }
+
     private int getSrednica() {
         return Math.min(getWidth(), getHeight());
     }
@@ -79,20 +84,22 @@ public class PrzyciskOkragly extends JButton {
         Ellipse2D.Double kolko = new Ellipse2D.Double(getWidth() / 2 - radius + 2, getHeight() / 2 - radius + 2, diameter - 4, diameter - 4);
         Graphics2D test = (Graphics2D) g;
 
-        if (mousePressed) {
-            g.setColor(Color.LIGHT_GRAY);
-        } else {
-            g.setColor(Color.WHITE);
-        }
-        Ellipse2D.Double kolko1 = new Ellipse2D.Double(getWidth() / 2 - radius, getHeight() / 2 - radius, diameter, diameter);
-        test.fill(kolko1);
+//        if (mousePressed) {
+//            g.setColor(Color.LIGHT_GRAY);
+//        } else {
+//            g.setColor(Color.WHITE);
+//        }
 
-        if (mouseOver) {
+        //Ellipse2D.Double kolko1 = new Ellipse2D.Double(getWidth() / 2 - radius, getHeight() / 2 - radius, diameter, diameter);
+        //test.fill(kolko1);
+        g.setColor(kolor);
+
+        /*if (mouseOver) {
             g.setColor(Color.BLUE);
         } else {
             g.setColor(Color.BLACK);
         }
-
+*/
         test.fill(kolko);
     }
 }

@@ -55,11 +55,52 @@ public class Graf {
         return wezlow;
     }
 
-    void dodajKrawedz(int w1, int w2, double waga) {
+    public double getMinWaga() {
+        double min = -1;
+        int pom = -1;
+        for (int x = 0; x < krawedzie.length; x++) {
+            if (krawedzie[x].size() > 0) {
+                min = krawedzie[x].wagi[0];
+                pom = x;
+                break;
+            }
+        }
+        if (pom == -1) {
+            //throw new Exception();  TODO custom exception!!!
+        }
+        for (int x = pom; x < krawedzie.length; x++) {
+            for (int y = 0; y < krawedzie[x].size(); y++)
+                min = Math.min(krawedzie[x].wagi[y], min);
+        }
+        return min;
+    }
+
+    public double getMaxWaga() {
+        double max = -1;
+        int pom = -1;
+        for (int x = 0; x < krawedzie.length; x++) {
+            if (krawedzie[x].size() > 0) {
+                max = krawedzie[x].wagi[0];
+                pom = x;
+                break;
+            }
+        }
+        if (pom == -1) {
+            //throw new Exception();  TODO custom exception!!!
+        }
+        for (int x = pom; x < krawedzie.length; x++) {
+            for (int y = 0; y < krawedzie[x].size(); y++)
+                max = Math.max(krawedzie[x].wagi[y], max);
+        }
+        return max;
+    }
+
+
+    public void dodajKrawedz(int w1, int w2, double waga) {
         krawedzie[w1].dodajKrawedz(w2, waga);
     }
 
-    void dodajKrawedzDwostronna(int w1, int w2, double waga) {
+    public void dodajKrawedzDwostronna(int w1, int w2, double waga) {
         krawedzie[w1].dodajKrawedz(w2, waga);
         krawedzie[w2].dodajKrawedz(w1, waga);
     }
