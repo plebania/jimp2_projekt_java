@@ -4,15 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
 
 public class PanelBoczny extends JPanel implements ActionListener {
 
-    public enum nr_algorytmu {
-        Dijkstra_alg,
-        Bfs_alg
+    public enum NR_ALG {
+        NR_ALG_NONE,
+        NR_ALG_DIJKSTRA,
+        NR_ALG_BFS
     }
 
     JButton przycisk_stworz = new JButton("Stwórz Graf"),
@@ -20,7 +19,7 @@ public class PanelBoczny extends JPanel implements ActionListener {
             przycisk_zapisz = new JButton("Zapisz"),
             przycisk_zapisz_jako = new JButton("Zapisz Jako"),
             przycisk_uruchom_algorytm = new JButton("Uruchom algorytm");
-    nr_algorytmu wybrany_algorytm = nr_algorytmu.Dijkstra_alg;
+    NR_ALG wybrany_algorytm = NR_ALG.NR_ALG_NONE;
 
     public PanelBoczny() {
         setPreferredSize(new Dimension(200, 100));
@@ -31,18 +30,22 @@ public class PanelBoczny extends JPanel implements ActionListener {
                 panel_gora = new JPanel(new GridLayout(0, 1)),
                 panel_dol = new JPanel(new GridLayout(0, 1));
         JLabel Algorytm_opis = new JLabel("Algorytm:");
-        JRadioButton Dijkstra = new JRadioButton("Dijkstra"),
+        JRadioButton None = new JRadioButton("None"),
+                Dijkstra = new JRadioButton("Dijkstra"),
                 Bfs = new JRadioButton("BFS");
         ButtonGroup algorytmy_grupa = new ButtonGroup();
 
         //pola wyboru algorytmu
+        None.addActionListener(this);
+        None.setSelected(true);
         Dijkstra.addActionListener(this);
-        Dijkstra.setSelected(true);
         Bfs.addActionListener(this);
         //grupowanie pol wyboru
+        algorytmy_grupa.add(None);
         algorytmy_grupa.add(Dijkstra);
         algorytmy_grupa.add(Bfs);
         //panel wyboru algorytmów
+        algorytmy_panel.add(None);
         algorytmy_panel.add(Dijkstra);
         algorytmy_panel.add(Bfs);
 
@@ -97,12 +100,13 @@ public class PanelBoczny extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
         switch (e.getActionCommand()) {
-            case "Dijkstra" -> wybrany_algorytm = nr_algorytmu.Dijkstra_alg;
-            case "BFS" -> wybrany_algorytm = nr_algorytmu.Bfs_alg;
+            case "None" -> wybrany_algorytm = NR_ALG.NR_ALG_NONE;
+            case "Dijkstra" -> wybrany_algorytm = NR_ALG.NR_ALG_DIJKSTRA;
+            case "BFS" -> wybrany_algorytm = NR_ALG.NR_ALG_BFS;
         }
     }
 
-    public nr_algorytmu getWybrany_algorytm() {
+    public NR_ALG getWybrany_algorytm() {
         return wybrany_algorytm;
     }
 }

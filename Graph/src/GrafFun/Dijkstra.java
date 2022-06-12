@@ -1,6 +1,5 @@
 package GrafFun;
 
-import gui.PanelGraf;
 import struktury.Graf;
 
 public class Dijkstra {
@@ -18,11 +17,12 @@ public class Dijkstra {
         droga = new double[n];
     }
 
-    public void szukaj(PanelGraf pg, int od) {
-        Graf g = pg.getG();
+    public Graf szukaj(Graf g, int od) {
         Graf pom_g = new Graf(g.size());
+        pom_g.setH(g.getH());
+        pom_g.setW(g.getW());
         if (od >= g.size())
-            return;
+            return null;
         Kopiec k = new Kopiec(g.size());
         initDijkstra(g.size());
 
@@ -49,11 +49,7 @@ public class Dijkstra {
                 }
             }
         }
-        pg.setKoloryDijkstra(pom_g);
-    }
-
-    public int size() {
-        return size;
+        return pom_g;
     }
 
     @Override

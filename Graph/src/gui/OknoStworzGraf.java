@@ -2,7 +2,7 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class OknoStworzGraf extends JDialog {
 
@@ -27,10 +27,129 @@ public class OknoStworzGraf extends JDialog {
         min_pole_tekstowe.setHorizontalAlignment(SwingConstants.RIGHT);
         max_pole_tekstowe.setHorizontalAlignment(SwingConstants.RIGHT);
 
+        KeyAdapter wHKeyAdapter = new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE)) {
+                    e.consume();  // if it's not a number, ignore the event
+                }
+            }
+        }, minMaxKeyAdapter = new KeyAdapter() {
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                if (((c < '0') || (c > '9')) && (c != KeyEvent.VK_BACK_SPACE) && c != '.') {
+                    e.consume();  // if it's not a number, ignore the event
+                }
+            }
+
+        };
+
+        FocusAdapter wFocusAdapter, hFocusAdapter, minFocusAdapter, maxFocusAdapter;
+        wFocusAdapter = new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pom = szerokosc_pole_tekstowe.getText();
+                if (pom.equals(""))
+                    szerokosc_pole_tekstowe.setText("w");
+                try {
+                    w = Integer.parseInt(pom);
+                } catch (Exception ex) {
+                    szerokosc_pole_tekstowe.setText("w");
+                }
+                super.focusLost(e);
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (szerokosc_pole_tekstowe.getText().equals("w"))
+                    szerokosc_pole_tekstowe.setText("");
+                super.focusLost(e);
+            }
+        };
+        hFocusAdapter = new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pom = wysokosc_pole_tekstowe.getText();
+                if (pom.equals(""))
+                    wysokosc_pole_tekstowe.setText("h");
+                try {
+                    h = Integer.parseInt(pom);
+                } catch (Exception ex) {
+                    wysokosc_pole_tekstowe.setText("h");
+                }
+
+                super.focusLost(e);
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (wysokosc_pole_tekstowe.getText().equals("h"))
+                    wysokosc_pole_tekstowe.setText("");
+                super.focusLost(e);
+            }
+        };
+
+        minFocusAdapter = new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pom = min_pole_tekstowe.getText();
+                if (pom.equals(""))
+                    min_pole_tekstowe.setText("min");
+                try {
+                    w_min = Double.parseDouble(pom);
+                } catch (Exception ex) {
+                    min_pole_tekstowe.setText("min");
+                }
+                super.focusLost(e);
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (min_pole_tekstowe.getText().equals("min"))
+                    min_pole_tekstowe.setText("");
+                super.focusLost(e);
+            }
+        };
+
+        maxFocusAdapter = new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String pom = max_pole_tekstowe.getText();
+                if (pom.equals(""))
+                    max_pole_tekstowe.setText("max");
+                try {
+                    w_max = Double.parseDouble(pom);
+                } catch (Exception ex) {
+                    max_pole_tekstowe.setText("max");
+                }
+                super.focusLost(e);
+
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (max_pole_tekstowe.getText().equals("max"))
+                    max_pole_tekstowe.setText("");
+                super.focusLost(e);
+            }
+        };
+
+        szerokosc_pole_tekstowe.addKeyListener(wHKeyAdapter);
+        szerokosc_pole_tekstowe.addFocusListener(wFocusAdapter);
+        wysokosc_pole_tekstowe.addKeyListener(wHKeyAdapter);
+        wysokosc_pole_tekstowe.addFocusListener(hFocusAdapter);
+        min_pole_tekstowe.addKeyListener(minMaxKeyAdapter);
+        min_pole_tekstowe.addFocusListener(minFocusAdapter);
+        max_pole_tekstowe.addKeyListener(minMaxKeyAdapter);
+        max_pole_tekstowe.addFocusListener(maxFocusAdapter);
+
 
         setLocationRelativeTo(null);
+
         setVisible(true);
+
         setTitle("Stwórz Graf");
+
         setLayout(new GridLayout(0, 1));
 
         //JPanel panelOpisanePolaTekstowe = new JPanel(new FlowLayout()), panelOpisy = new;
@@ -55,9 +174,13 @@ public class OknoStworzGraf extends JDialog {
         panel_przyciski.add(przycisk_anuluj);
 
         add(panel_wagi_wymiary);
+
         add(panel_przyciski);
+
         pack();
+
     }
+
 
     public void setActionListeners(ActionListener a) {
         przycisk_anuluj.addActionListener(a);

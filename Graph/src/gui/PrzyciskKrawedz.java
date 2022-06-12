@@ -72,6 +72,7 @@ public class PrzyciskKrawedz extends JButton {
         this.x2 = x2;
         this.y2 = y2;
         this.grubosc = grubosc;
+        this.setBounds(x1 - grubosc, y1 - grubosc, x2 - x1 + 2 * grubosc, y2 - y1 + 2 * grubosc);
     }
 
     /*
@@ -109,7 +110,8 @@ public class PrzyciskKrawedz extends JButton {
         else
             test.setColor(kolorDomyslny);
         test.setStroke(new BasicStroke(grubosc));
-        test.drawLine(x1, y1, x2, y2);
+        test.drawLine(grubosc, grubosc, x2 - x1 + grubosc, y2 - y1 + grubosc);
+        //test.drawLine(x1, y1, x2, y2);
         //test.drawLine(x1, y1, x2, y2);
 
 

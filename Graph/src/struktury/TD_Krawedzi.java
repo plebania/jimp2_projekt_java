@@ -7,10 +7,10 @@ public class TD_Krawedzi {
 
     public TD_Krawedzi() {
         komorek = 0;
-        rozmiar = 2;
-        wagi = new double[2];
-        Do = new int[2];
-        for (int x = 0; x < 2; x++) {
+        rozmiar = 4;
+        wagi = new double[4];
+        Do = new int[4];
+        for (int x = 0; x < 4; x++) {
             wagi[x] = 0;
             Do[x] = -1;
         }

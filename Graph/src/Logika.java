@@ -19,8 +19,19 @@ public class Logika implements ActionListener {
     OknoStworzGraf o1;
     OknoWybierzPlik o2;
     String sciezka = "";
+    JScrollPane panelGrafScroll;
 
     Random r = new Random(System.currentTimeMillis());
+
+    public Logika() {
+        panelBoczny = new PanelBoczny();
+        panelGraf = new PanelGraf();
+        panelGrafScroll = new JScrollPane(panelGraf);
+        o = new OknoGlowne(panelBoczny, panelGrafScroll);
+        panelBoczny.setActions(new AkcjaZapiszJako(), new AkcjaZapisz(), new AkcjaWczytaj(), new AkcjaStworzGraf(), new AkcjaUruchomAlgorytm());
+
+        o.Show();
+    }
 
     private class AkcjaZapiszJako extends AbstractAction {
         AkcjaZapiszJako() {
@@ -80,7 +91,7 @@ public class Logika implements ActionListener {
             if (!pom.equals("")) {
                 try {
                     g = Util.wczytajGraf(pom);
-                    panelGraf.setGraf(g);
+                    panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
                     sciezka = pom;
                 } catch (IOException ex) {
                     System.err.println(ex.getMessage());
@@ -90,22 +101,25 @@ public class Logika implements ActionListener {
     }
 
     private class AkcjaUruchomAlgorytm extends AbstractAction {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("uruchom");
             if (g == null)
                 return;
             switch (panelBoczny.getWybrany_algorytm()) {
-                case Dijkstra_alg -> {
-                    Dijkstra dij = new Dijkstra();
-                    dij.szukaj(panelGraf, 0);
-                    System.out.println(dij);
+                case NR_ALG_NONE -> {
+                    System.out.println(panelGrafScroll.getWidth());
+                    panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
                 }
-                case Bfs_alg -> {
+                case NR_ALG_DIJKSTRA -> {
+                    Dijkstra dij = new Dijkstra();
+                    panelGraf.setGrafDijkstra(dij.szukaj(g, panelGraf.getWybranyWezel()), dij.droga);
+                    System.out.println("dijkstra done");
+                }
+                case NR_ALG_BFS -> {
                     Bfs bfs = new Bfs();
-                    bfs.szukaj(panelGraf, 0);
-                    System.out.println(bfs);
+                    panelGraf.setGrafBFS(bfs.szukaj(g, panelGraf.getWybranyWezel()), bfs.zwiedzone);
+                    System.out.println("bfs done");
                 }
             }
         }
@@ -125,19 +139,11 @@ public class Logika implements ActionListener {
         }
     }
 
-    public Logika() {
-        panelBoczny = new PanelBoczny();
-        panelGraf = new PanelGraf();
-        o = new OknoGlowne(panelBoczny, panelGraf);
-        panelBoczny.setActions(new AkcjaZapiszJako(), new AkcjaZapisz(), new AkcjaWczytaj(), new AkcjaStworzGraf(), new AkcjaUruchomAlgorytm());
-
-        o.Show();
-    }
 
     void akcjaPrzyciskuStworz() {
         g = new Graf(o1.getW(), o1.getH());
         g.stworzGraf(o1.getW_min(), o1.getW_max(), r);
-        panelGraf.setGraf(g);
+        panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
         o1.dispatchEvent(new WindowEvent(o1, WindowEvent.WINDOW_CLOSING));
     }
 

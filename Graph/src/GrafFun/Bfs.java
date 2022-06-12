@@ -1,6 +1,5 @@
 package GrafFun;
 
-import gui.PanelGraf;
 import struktury.Graf;
 
 
@@ -14,10 +13,12 @@ public class Bfs {
         size = n;
     }
 
-    public void szukaj(PanelGraf pg, int od) {
-        Graf g = pg.getG(), pom_g = new Graf(g.size());
+    public Graf szukaj(Graf g, int od) {
+        Graf pom_g = new Graf(g.size());
+        pom_g.setH(g.getH());
+        pom_g.setW(g.getW());
         if (od >= g.size())
-            return;
+            return null;
         initBfs(g.size());
         Kolejka k = new Kolejka();
         for (int x = 0; x < g.size(); x++) {
@@ -42,7 +43,7 @@ public class Bfs {
             }
             zwiedzone[w] = 2;
         }
-        pg.setKoloryBFS(pom_g);
+        return pom_g;
     }
 
     @Override
