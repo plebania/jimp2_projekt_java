@@ -89,8 +89,10 @@ public class Graf {
             //throw new Exception();  TODO custom exception!!!
         }
         for (int x = pom; x < krawedzie.length; x++) {
-            for (int y = 0; y < krawedzie[x].size(); y++)
+            for (int y = 0; y < krawedzie[x].size(); y++) {
+                if (krawedzie[x].wagi[y] >= Double.POSITIVE_INFINITY) continue;
                 max = Math.max(krawedzie[x].wagi[y], max);
+            }
         }
         return max;
     }

@@ -229,9 +229,9 @@ public class PanelGraf extends JPanel {
                         break;
                     }
                 }
-
                 if (wierzDo > x) {
                     int pom = (int) ((alg_g.krawedzie[x].wagi[y] - minWaga) * 255 / (maxWaga - minWaga));
+
                     grafImageG2D.setColor(new Color(pom, 0, 0));
                     grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
 
@@ -252,8 +252,12 @@ public class PanelGraf extends JPanel {
 
         Ellipse2D.Double kolo = new Ellipse2D.Double(0, 0, 2 * R, 2 * R);
         for (int x = 0; x < wezlowGraf; x++) {
-            int pom = (int) ((Dijkstra_droga[x]) * 255 / (maxWaga));
-            grafImageG2D.setColor(new Color(pom, 0, 0));
+            if (Dijkstra_droga[x] >= Double.POSITIVE_INFINITY)
+                grafImageG2D.setColor(Color.BLACK);
+            else {
+                int pom = (int) ((Dijkstra_droga[x]) * 255 / (maxWaga));
+                grafImageG2D.setColor(new Color(pom, 0, 0));
+            }
             kolo.setFrame(x % g.getW() * (R * 2 + dl_krawedzi), ((double) (x / g.getW()) * (R * 2 + dl_krawedzi)), R * 2, R * 2);
             grafImageG2D.fill(kolo);
         }
