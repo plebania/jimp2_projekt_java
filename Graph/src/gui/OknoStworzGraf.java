@@ -53,6 +53,8 @@ public class OknoStworzGraf extends JDialog {
                     szerokosc_pole_tekstowe.setText("w");
                 try {
                     w = Integer.parseInt(pom);
+                    if (w == 0)
+                        szerokosc_pole_tekstowe.setText("w");
                 } catch (Exception ex) {
                     szerokosc_pole_tekstowe.setText("w");
                 }
@@ -74,6 +76,8 @@ public class OknoStworzGraf extends JDialog {
                     wysokosc_pole_tekstowe.setText("h");
                 try {
                     h = Integer.parseInt(pom);
+                    if (h == 0)
+                        wysokosc_pole_tekstowe.setText("h");
                 } catch (Exception ex) {
                     wysokosc_pole_tekstowe.setText("h");
                 }

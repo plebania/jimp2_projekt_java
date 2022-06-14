@@ -107,21 +107,25 @@ public class Logika implements ActionListener {
             System.out.println("uruchom");
             if (g == null)
                 return;
-            switch (panelBoczny.getWybrany_algorytm()) {
-                case NR_ALG_NONE -> {
-                    System.out.println(panelGrafScroll.getWidth());
-                    panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
+            try {
+                switch (panelBoczny.getWybrany_algorytm()) {
+                    case NR_ALG_NONE -> {
+                        System.out.println(panelGrafScroll.getWidth());
+                        panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
+                    }
+                    case NR_ALG_DIJKSTRA -> {
+                        Dijkstra dij = new Dijkstra();
+                        panelGraf.setGrafDijkstra(dij.szukaj(g, panelGraf.getWybranyWezel()), dij.droga, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
+                        System.out.println("dijkstra done");
+                    }
+                    case NR_ALG_BFS -> {
+                        Bfs bfs = new Bfs();
+                        panelGraf.setGrafBFS(bfs.szukaj(g, panelGraf.getWybranyWezel()), bfs.zwiedzone, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
+                        System.out.println("bfs done");
+                    }
                 }
-                case NR_ALG_DIJKSTRA -> {
-                    Dijkstra dij = new Dijkstra();
-                    panelGraf.setGrafDijkstra(dij.szukaj(g, panelGraf.getWybranyWezel()), dij.droga, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
-                    System.out.println("dijkstra done");
-                }
-                case NR_ALG_BFS -> {
-                    Bfs bfs = new Bfs();
-                    panelGraf.setGrafBFS(bfs.szukaj(g, panelGraf.getWybranyWezel()), bfs.zwiedzone, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
-                    System.out.println("bfs done");
-                }
+            } catch (OutOfMemoryError ex) {
+                Problemy.Util.createPopup("Out of Memory");
             }
         }
     }

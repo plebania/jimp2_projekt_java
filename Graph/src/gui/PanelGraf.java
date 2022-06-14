@@ -9,6 +9,7 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.lang.instrument.Instrumentation;
 
 public class PanelGraf extends JPanel {
     int wybranyWezel = 0;
@@ -41,12 +42,36 @@ public class PanelGraf extends JPanel {
                 int nr = x + g.getW() * y;
                 if (nr > g.size()) return;
                 if (Point2D.distance(x * 3 * R + R, y * 3 * R + R, e.getX(), e.getY()) < R) {
-                    wybranyWezel = nr;
+                    Ellipse2D.Double kolo = new Ellipse2D.Double(wybranyWezel % g.getW() * (R * 2 + dl_krawedzi), ((double) (wybranyWezel / g.getW()) * (R * 2 + dl_krawedzi)), R * 2, R * 2);
+                    grafImageG2D.setColor(Color.BLACK);
+
                     switch (nr_alg) {
-                        case NR_ALG_NONE -> narysujGraf();
-                        case NR_ALG_BFS -> narysujGrafBFS();
-                        case NR_ALG_DIJKSTRA -> narysujGrafDijkstra();
+                        case NR_ALG_NONE -> {
+                            grafImageG2D.setColor(Color.BLACK);
+                            grafImageG2D.fill(kolo);
+
+                        }
+                        case NR_ALG_BFS -> {
+                            if (BFS_zwiedzone[wybranyWezel] == 2)
+                                grafImageG2D.setColor(new Color(0, 155, 0));
+                            else
+                                grafImageG2D.setColor(Color.BLACK);
+                            grafImageG2D.fill(kolo);
+                        }
+                        case NR_ALG_DIJKSTRA -> {
+                            if (Dijkstra_droga[wybranyWezel] >= Double.POSITIVE_INFINITY)
+                                grafImageG2D.setColor(Color.BLACK);
+                            else {
+                                int pom = (int) ((Dijkstra_droga[wybranyWezel]) * 255 / (alg_g.getMaxWaga()));
+                                grafImageG2D.setColor(new Color(pom, 0, 0));
+                            }
+                            grafImageG2D.fill(kolo);
+                        }
                     }
+                    wybranyWezel = nr;
+                    kolo.setFrame(wybranyWezel % g.getW() * (R * 2 + dl_krawedzi), ((double) (wybranyWezel / g.getW()) * (R * 2 + dl_krawedzi)), R * 2, R * 2);
+                    grafImageG2D.setColor(Color.BLUE);
+                    grafImageG2D.fill(kolo);
                     repaint();
                 }
             }
