@@ -1,13 +1,12 @@
 import GrafFun.Bfs;
 import GrafFun.Dijkstra;
+import Problemy.Util;
 import gui.*;
 import struktury.Graf;
 
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.Random;
-
-import IO.Util;
 
 import javax.swing.*;
 
@@ -29,7 +28,6 @@ public class Logika implements ActionListener {
         panelGrafScroll = new JScrollPane(panelGraf);
         o = new OknoGlowne(panelBoczny, panelGrafScroll);
         panelBoczny.setActions(new AkcjaZapiszJako(), new AkcjaZapisz(), new AkcjaWczytaj(), new AkcjaStworzGraf(), new AkcjaUruchomAlgorytm());
-
         o.Show();
     }
 
@@ -45,9 +43,10 @@ public class Logika implements ActionListener {
             String pom = o2.getSciezka();
             if (!pom.equals(""))
                 try {
-                    Util.zapiszGraf(g, pom);
+                    IO.Util.zapiszGraf(g, pom);
                     sciezka = pom;
                 } catch (IOException ex) {
+                    Problemy.Util.createPopup(ex.getMessage());
                     System.err.println(ex.getMessage());
                 }
         }
@@ -69,9 +68,10 @@ public class Logika implements ActionListener {
                 if (pom.equals("")) return;
             }
             try {
-                Util.zapiszGraf(g, pom);
+                IO.Util.zapiszGraf(g, pom);
                 sciezka = pom;
             } catch (IOException ex) {
+                Problemy.Util.createPopup(ex.getMessage());
                 System.err.println(ex.getMessage());
             }
         }
@@ -90,10 +90,11 @@ public class Logika implements ActionListener {
             String pom = o2.getSciezka();
             if (!pom.equals("")) {
                 try {
-                    g = Util.wczytajGraf(pom);
+                    g = IO.Util.wczytajGraf(pom);
                     panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
                     sciezka = pom;
-                } catch (IOException ex) {
+                } catch (Exception ex) {
+                    Problemy.Util.createPopup("Problem z wczytaniem pliku\nkomunikat błędu: " + ex.getMessage());
                     System.err.println(ex.getMessage());
                 }
             }
@@ -113,12 +114,12 @@ public class Logika implements ActionListener {
                 }
                 case NR_ALG_DIJKSTRA -> {
                     Dijkstra dij = new Dijkstra();
-                    panelGraf.setGrafDijkstra(dij.szukaj(g, panelGraf.getWybranyWezel()), dij.droga);
+                    panelGraf.setGrafDijkstra(dij.szukaj(g, panelGraf.getWybranyWezel()), dij.droga, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
                     System.out.println("dijkstra done");
                 }
                 case NR_ALG_BFS -> {
                     Bfs bfs = new Bfs();
-                    panelGraf.setGrafBFS(bfs.szukaj(g, panelGraf.getWybranyWezel()), bfs.zwiedzone);
+                    panelGraf.setGrafBFS(bfs.szukaj(g, panelGraf.getWybranyWezel()), bfs.zwiedzone, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
                     System.out.println("bfs done");
                 }
             }
@@ -145,6 +146,7 @@ public class Logika implements ActionListener {
         g.stworzGraf(o1.getW_min(), o1.getW_max(), r);
         panelGraf.setGraf(g, panelGrafScroll.getWidth(), panelGrafScroll.getHeight());
         o1.dispatchEvent(new WindowEvent(o1, WindowEvent.WINDOW_CLOSING));
+        sciezka = "";
     }
 
     void akcjaPrzyciskuAnuluj() {
@@ -152,7 +154,7 @@ public class Logika implements ActionListener {
     }
 
 
-    public void actionPerformed(ActionEvent e) {  //TODO obsluga eventow do innego threada?
+    public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
         switch (e.getActionCommand()) {
             case "Stwórz" -> akcjaPrzyciskuStworz();

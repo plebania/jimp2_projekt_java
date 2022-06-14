@@ -36,6 +36,8 @@ public class Bfs {
                 if (zwiedzone[v] == 0) {
                     zwiedzone[v] = 1;
                     pom_g.dodajKrawedz(w, v, 1);
+                    if (g.istniejeOdwrotna(w, v))
+                        pom_g.dodajKrawedz(v, w, 1);
                     // out->odleglosc[v] = out->odleglosc[w] + 1;
                     poprzednik[v] = w;
                     k.dodajWierzcholek(v);

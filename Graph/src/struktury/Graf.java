@@ -89,10 +89,8 @@ public class Graf {
             //throw new Exception();  TODO custom exception!!!
         }
         for (int x = pom; x < krawedzie.length; x++) {
-            for (int y = 0; y < krawedzie[x].size(); y++) {
-                if (krawedzie[x].wagi[y] >= Double.POSITIVE_INFINITY) continue;
+            for (int y = 0; y < krawedzie[x].size(); y++)
                 max = Math.max(krawedzie[x].wagi[y], max);
-            }
         }
         return max;
     }
@@ -130,6 +128,14 @@ public class Graf {
         }
         for (int y = 0; y < h - 1; y++)
             dodajKrawedzDwostronna((y + 1) * w - 1, (y + 2) * w - 1, rand(min_wag, max_wag, r));
+    }
+
+    public Boolean istniejeOdwrotna(int _od, int _do) {
+        for (int z = 0; z < krawedzie[_do].size(); z++)
+            if (krawedzie[_do].Do[z] == _od)
+                return true;
+
+        return false;
     }
 
     @Override

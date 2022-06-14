@@ -2,6 +2,8 @@ package GrafFun;
 
 import struktury.Graf;
 
+import java.util.zip.DeflaterOutputStream;
+
 public class Dijkstra {
     public int[] od;
     public double[] droga;
@@ -43,11 +45,17 @@ public class Dijkstra {
                 waga = g.krawedzie[w].wagi[y];
                 if (droga[w] + waga < droga[v]) {
                     droga[v] = droga[w] + waga;
-                    pom_g.dodajKrawedz(w, v, droga[v]);
                     this.od[v] = w;
                     k.dodaj(v, droga[v]);
                 }
             }
+        }
+        for (int x = 0; x < this.od.length; x++) {
+            if (droga[x] >= Double.POSITIVE_INFINITY)
+                continue;
+            pom_g.dodajKrawedz(this.od[x], x, droga[x]);
+            if (g.istniejeOdwrotna(this.od[x], x))
+                pom_g.dodajKrawedz(x, this.od[x], droga[x]);
         }
         return pom_g;
     }

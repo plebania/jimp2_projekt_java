@@ -35,6 +35,7 @@ public class PanelGraf extends JPanel {
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (g == null) return;
                 int x = e.getX() / (3 * R), y = (e.getY() / (3 * R));
                 if (x >= g.getW() || y >= g.getH()) return;
                 int nr = x + g.getW() * y;
@@ -92,11 +93,44 @@ public class PanelGraf extends JPanel {
         g2d.drawImage(grafImage, null, 0, 0);
     }
 
+    private void drawArrowLine(Graphics2D g, int x1, int y1, int x2, int y2, int d, int h) {
+
+        double x2_save = x2, y2_save = y2;
+        double dlVec2 = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+        if (x1 == x2)
+            y2 -= (R - 2);
+        else {
+            x2 -= (x2 - x1) * (R - 2) / Math.sqrt(dlVec2);
+            y2 -= (y2 - y1) * (R - 2) / Math.sqrt(dlVec2);
+        }
+        int dx = x2 - x1, dy = y2 - y1;
+        double D = Math.sqrt(dx * dx + dy * dy);
+        double xm = D - d, xn = xm, ym = h, yn = -h, x;
+        double sin = dy / D, cos = dx / D;
+
+        x = xm * cos - ym * sin + x1;
+        ym = xm * sin + ym * cos + y1;
+        xm = x;
+
+        x = xn * cos - yn * sin + x1;
+        yn = xn * sin + yn * cos + y1;
+        xn = x;
+
+        int[] xpoints = {x2, (int) xm, (int) xn};
+        int[] ypoints = {y2, (int) ym, (int) yn};
+
+        g.fillPolygon(xpoints, ypoints, 3);
+        if (x1 == x2)
+            y2 -= d;
+        else {
+            x2 -= (x2_save - x1) * d / Math.sqrt(dlVec2);
+            y2 -= (y2_save - y1) * d / Math.sqrt(dlVec2);
+        }
+        g.drawLine(x1, y1, x2, y2);
+    }
 
     public void narysujGraf() {
         if (this.g == null) return;
-        //TODO custom exception
-
         int wezlow = g.size();
         dl_krawedzi = R;
         int grK = 4;  //grK-grubosc krawedzi
@@ -106,33 +140,26 @@ public class PanelGraf extends JPanel {
         grafImageG2D.setStroke(new BasicStroke(grK));
 
         double minWaga = g.getMinWaga(), maxWaga = g.getMaxWaga();
-
         for (int x = 0; x < wezlow; x++) {
             for (int y = 0; y < g.krawedzie[x].size(); y++) {
                 int wierzDo = g.krawedzie[x].Do[y];
-                int istniejeOdwrotna = 0;
-                for (int z = 0; z < g.krawedzie[wierzDo].size(); z++) {
-                    if (g.krawedzie[wierzDo].Do[z] == x) {
-                        istniejeOdwrotna = 1;
-                        break;
-                    }
-                }
+                Boolean istniejeOdwrotna = g.istniejeOdwrotna(x, wierzDo);
                 if (wierzDo > x) {
                     int pom = (int) ((g.krawedzie[x].wagi[y] - minWaga) * 255 / (maxWaga - minWaga));
                     grafImageG2D.setColor(new Color(pom, pom, pom));
-                    grafImageG2D.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(wierzDo, g.getW()), getPozYWezla(wierzDo, g.getW()));
 
                     //Krawedz skierowana
-                    if (istniejeOdwrotna == 0) {
-                        //g2d.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(x, g.getW()) - 10, getPozYWezla(x, g.getW()) + 100);
-                    }
+                    if (!istniejeOdwrotna)
+                        drawArrowLine(grafImageG2D, getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(wierzDo, g.getW()), getPozYWezla(wierzDo, g.getW()), R / 2, Math.max(R / 4, grK * 2));
+                    else
+                        grafImageG2D.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(wierzDo, g.getW()), getPozYWezla(wierzDo, g.getW()));
+
                 } else {
-                    if (istniejeOdwrotna == 1)
+                    if (istniejeOdwrotna)
                         continue;
                     int pom = (int) ((g.krawedzie[x].wagi[y] - minWaga) * 255 / (maxWaga - minWaga));
                     grafImageG2D.setColor(new Color(pom, pom, pom));
-                    grafImageG2D.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(wierzDo, g.getW()), getPozYWezla(wierzDo, g.getW()));
-
+                    drawArrowLine(grafImageG2D, getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(wierzDo, g.getW()), getPozYWezla(wierzDo, g.getW()), R / 2, Math.max(R / 4, grK * 2));
                 }
             }
         }
@@ -152,7 +179,6 @@ public class PanelGraf extends JPanel {
 
     public void narysujGrafBFS() {
         if (this.g == null || this.alg_g == null) return;
-        //TODO custom exception
         int wezlowAlgorytm = alg_g.size(), wezlowGraf = g.size();
         dl_krawedzi = R;
         int grK = 4;  //grK-grubosc krawedzi
@@ -164,13 +190,7 @@ public class PanelGraf extends JPanel {
         for (int x = 0; x < wezlowAlgorytm; x++) {
             for (int y = 0; y < alg_g.krawedzie[x].size(); y++) {
                 int wierzDo = alg_g.krawedzie[x].Do[y];
-                int istniejeOdwrotna = 0;
-                for (int z = 0; z < alg_g.krawedzie[wierzDo].size(); z++) {
-                    if (alg_g.krawedzie[wierzDo].Do[z] == x) {
-                        istniejeOdwrotna = 1;
-                        break;
-                    }
-                }
+                Boolean istniejeOdwrotna = alg_g.istniejeOdwrotna(x, wierzDo);
                 grafImageG2D.setColor(Color.GRAY);
                 if (wierzDo > x) {
                     for (int z = 0; z < alg_g.krawedzie[x].size(); z++)
@@ -178,15 +198,15 @@ public class PanelGraf extends JPanel {
                             grafImageG2D.setColor(kolor_odwiedzone);
                             break;
                         }
-                    grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
-                    //Krawedz skierowana
-                    if (istniejeOdwrotna == 0) {
-                        //g2d.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(x, g.getW()) - 10, getPozYWezla(x, g.getW()) + 100);
-                    }
+                    if (!istniejeOdwrotna)
+                        drawArrowLine(grafImageG2D, getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()), R / 2, Math.max(R / 4, grK * 2));
+                    else
+                        grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
+
                 } else {
-                    if (istniejeOdwrotna == 1)
+                    if (istniejeOdwrotna)
                         continue;
-                    grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
+                    drawArrowLine(grafImageG2D, getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()), R / 2, Math.max(R / 4, grK * 2));
                 }
             }
         }
@@ -210,7 +230,6 @@ public class PanelGraf extends JPanel {
 
     public void narysujGrafDijkstra() {
         if (this.alg_g == null) return;
-        //TODO custom exception
         int wezlowGraf = alg_g.size(), wezlowAlgorytm = g.size();
         dl_krawedzi = R;
         int grK = 4;  //grK-grubosc krawedzi
@@ -222,29 +241,23 @@ public class PanelGraf extends JPanel {
         for (int x = 0; x < wezlowAlgorytm; x++) {
             for (int y = 0; y < alg_g.krawedzie[x].size(); y++) {
                 int wierzDo = alg_g.krawedzie[x].Do[y];
-                int istniejeOdwrotna = 0;
-                for (int z = 0; z < alg_g.krawedzie[wierzDo].size(); z++) {
-                    if (alg_g.krawedzie[wierzDo].Do[z] == x) {
-                        istniejeOdwrotna = 1;
-                        break;
-                    }
-                }
+                Boolean istniejeOdwrotna = alg_g.istniejeOdwrotna(x, wierzDo);
                 if (wierzDo > x) {
                     int pom = (int) ((alg_g.krawedzie[x].wagi[y] - minWaga) * 255 / (maxWaga - minWaga));
-
                     grafImageG2D.setColor(new Color(pom, 0, 0));
                     grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
 
                     //Krawedz skierowana
-                    if (istniejeOdwrotna == 0) {
-                        //g2d.drawLine(getPozXWezla(x, g.getW()), getPozYWezla(x, g.getW()), getPozXWezla(x, g.getW()) - 10, getPozYWezla(x, g.getW()) + 100);
-                    }
+                    if (!istniejeOdwrotna)
+                        drawArrowLine(grafImageG2D, getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()), R / 2, Math.max(R / 4, grK * 2));
+                    else
+                        grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
                 } else {
-                    if (istniejeOdwrotna == 1)
+                    if (istniejeOdwrotna)
                         continue;
                     int pom = (int) ((alg_g.krawedzie[x].wagi[y] - minWaga) * 255 / (maxWaga - minWaga));
                     grafImageG2D.setColor(new Color(pom, 0, 0));
-                    grafImageG2D.drawLine(getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()));
+                    drawArrowLine(grafImageG2D, getPozXWezla(x, alg_g.getW()), getPozYWezla(x, alg_g.getW()), getPozXWezla(wierzDo, alg_g.getW()), getPozYWezla(wierzDo, alg_g.getW()), R / 2, Math.max(R / 4, grK * 2));
 
                 }
             }
@@ -268,16 +281,9 @@ public class PanelGraf extends JPanel {
         updateUI();
     }
 
-    public void setGraf(Graf g, int w, int h) {
-        this.g = g;
-        BFS_zwiedzone = null;
-        Dijkstra_droga = null;
-        nr_alg = NR_ALG.NR_ALG_NONE;
-        System.out.println(w);
-        System.out.println(w);
+
+    void setWymiary(int w, int h) {
         R = Math.min(w / (3 * g.getW()), h / (3 * g.getH()));
-        System.out.println(R);
-        //R = (w - (g.getW() - 1) * 2) / (g.getW());
         if (R > 25) R = 25;
         if (R < 10) R = 10;
         wymiary.width = g.getW() * R * 3 + 8;
@@ -285,12 +291,21 @@ public class PanelGraf extends JPanel {
         grafImage = new BufferedImage(wymiary.width, wymiary.height, BufferedImage.TYPE_INT_RGB);
         grafImageG2D = grafImage.createGraphics();
         setPreferredSize(wymiary);
+    }
+
+    public void setGraf(Graf g, int w, int h) {
+        this.g = g;
+        setWymiary(w, h);
+        BFS_zwiedzone = null;
+        Dijkstra_droga = null;
+        nr_alg = NR_ALG.NR_ALG_NONE;
         narysujGraf();
         this.repaint();
     }
 
-    public void setGrafBFS(Graf g, int[] zwiedzone) {
+    public void setGrafBFS(Graf g, int[] zwiedzone, int w, int h) {
         alg_g = g;
+        setWymiary(w, h);
         BFS_zwiedzone = zwiedzone;
         Dijkstra_droga = null;
         nr_alg = NR_ALG.NR_ALG_BFS;
@@ -298,8 +313,9 @@ public class PanelGraf extends JPanel {
         repaint();
     }
 
-    public void setGrafDijkstra(Graf g, double[] droga) {
+    public void setGrafDijkstra(Graf g, double[] droga, int w, int h) {
         alg_g = g;
+        setWymiary(w, h);
         BFS_zwiedzone = null;
         Dijkstra_droga = droga;
         nr_alg = NR_ALG.NR_ALG_DIJKSTRA;
