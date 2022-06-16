@@ -32,6 +32,7 @@ public class PanelGraf extends JPanel {
 
     public PanelGraf() {
         setLayout(null);
+        setBackground(new Color(255, 255, 150));
         addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
